@@ -90,7 +90,7 @@ public class GraphiteTests{
 
 		assertTrue(g.getNodes("_id", "soumadri@gmail.com").size() > 0);
 		assertTrue(g.getNodes("_id", "gouravkakkar@gmail.com").size() > 0);
-		assertTrue(g.getEdges("soumadri@gmail.com").size() > 0);	
+		assertTrue(g.getNeighbors("soumadri@gmail.com").size() > 0);	
 	}
 	
 }

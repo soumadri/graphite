@@ -113,7 +113,7 @@ public class BasicGraph implements Graph {
 	}
 	
 	@Override
-	public ArrayList<GraphEdge> getEdges(String from){
+	public ArrayList<GraphEdge> getNeighbors(String from){
 		ArrayList<GraphEdge> foundEdges = new ArrayList<GraphEdge>();
 		BasicDBObject query = new BasicDBObject("from", from);
 		
@@ -133,8 +133,20 @@ public class BasicGraph implements Graph {
 	}
 
 	@Override
-	public boolean hasRelation(GraphNode node1, GraphNode node2) {
+	public boolean isAdjacent(GraphNode node1, GraphNode node2) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void deleteEdge(GraphNode node1, GraphNode node2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteEdge(GraphEdge edge) {
+		// TODO Auto-generated method stub
+		
 	}
 }
