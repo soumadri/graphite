@@ -11,6 +11,8 @@ public class MongoConfiguration {
 	String database;
 	String nodesCollectionName;
 	String edgesCollectionName;
+	String userName;
+	String password;
 	
 	public MongoConfiguration(){
 		addresses = new ArrayList<ServerAddress>();
@@ -51,4 +53,34 @@ public class MongoConfiguration {
 	public void addServer(String host, int port) throws UnknownHostException {
 		addresses.add(new ServerAddress(host, port));
 	}
+
+	/**
+	 * @return the userName
+	 */
+	public String getUserName() {
+		return userName;
+	}
+
+	/**
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * @param userName the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	/**
+	 * @param password the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	
 }

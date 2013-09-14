@@ -25,7 +25,14 @@ public class BasicGraph implements Graph {
 		this.config = config;
 		m = MongoConnectionProvider.getMongo(config);
 		db = m.getDB(config.getDatabase());
-		
+		if(db.authenticate(config.getUserName(), config.getPassword().toCharArray()) == false) {
+            try {
+				throw new Exception("UnAuthorized Access");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
 		//If nodes and edges collection does not exists
 		//create it
 		nodes = db.getCollection(config.getNodesCollectionName());
