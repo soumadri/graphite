@@ -15,6 +15,10 @@ public class GraphNode implements DBObject {
 		nodeObject = new BasicDBObject();
 	}
 	
+	public GraphNode(BasicDBObject bd) {
+		nodeObject = bd;
+	}
+	
 	public GraphNode(String key, Object value){
 		nodeObject = new BasicDBObject(key,value);			
 	}
