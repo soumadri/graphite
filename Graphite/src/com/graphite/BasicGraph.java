@@ -9,6 +9,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.Mongo;
+import com.mongodb.WriteResult;
 
 public class BasicGraph implements Graph {
 	MongoConfiguration config;
@@ -25,14 +26,20 @@ public class BasicGraph implements Graph {
 		this.config = config;
 		m = MongoConnectionProvider.getMongo(config);
 		db = m.getDB(config.getDatabase());
-		if(db.authenticate(config.getUserName(), config.getPassword().toCharArray()) == false) {
-            try {
-				throw new Exception("UnAuthorized Access");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        }
+		
+		if(config.getUserName()!=null){
+			//username has been provided, please authenticate
+			
+			if(db.authenticate(config.getUserName(), config.getPassword().toCharArray()) == false) {
+	            try {
+					throw new Exception("UnAuthorized Access");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        }	
+		}
+		
 		//If nodes and edges collection does not exists
 		//create it
 		nodes = db.getCollection(config.getNodesCollectionName());
@@ -53,8 +60,9 @@ public class BasicGraph implements Graph {
 	 * @param node A GraphNode object
 	 * @param collection The name of the collection
 	 */
-	public void addNode(GraphNode node, String collection){
+	public String addNode(GraphNode node, String collection){
 		db.getCollection(collection).insert(node);
+		return  node.get( "_id" ).toString();
 	}
 	
 	/**
