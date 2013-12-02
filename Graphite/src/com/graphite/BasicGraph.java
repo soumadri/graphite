@@ -118,6 +118,7 @@ public class BasicGraph implements Graph {
 		try {
 		   while(cursor.hasNext()) {		       
 		       GraphNode node = (GraphNode) cursor.next();
+		       node.put("_id", node.get("_id").toString());
 		       foundNodes.add(node);
 		   }
 		} finally {
