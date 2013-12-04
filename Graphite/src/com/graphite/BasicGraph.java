@@ -149,7 +149,7 @@ public class BasicGraph implements Graph {
 	}
 	
 	@Override
-	public ArrayList<GraphEdge> getNeighborsWithProperty(String from,String property){
+	public ArrayList<GraphEdge> getNeighborsWithOutgoingProperty(String from,String property){
 		ArrayList<GraphEdge> foundEdges = new ArrayList<GraphEdge>();
 		BasicDBObject query = new BasicDBObject("from", from);
 		query.append("property", property);
@@ -183,7 +183,28 @@ public class BasicGraph implements Graph {
 
 	@Override
 	public void deleteEdge(GraphEdge edge) {
-		// TODO Auto-generated method stub
+		edges.remove(edge.edgeObject);
+
+	}
+
+	@Override
+	public ArrayList<GraphEdge> getNeighborsWithIncomingProperty(String to,
+			String property) {
+		ArrayList<GraphEdge> foundEdges = new ArrayList<GraphEdge>();
+		BasicDBObject query = new BasicDBObject("to", to);
+		query.append("property", property);
 		
+		edges.setObjectClass(GraphEdge.class);
+		DBCursor cursor = edges.find(query);
+		
+		try {
+		   while(cursor.hasNext()) {			   		       
+		       GraphEdge edge = (GraphEdge) cursor.next();
+		       foundEdges.add(edge);
+		   }
+		} finally {
+		   cursor.close();
+		}
+		return foundEdges;
 	}
 }

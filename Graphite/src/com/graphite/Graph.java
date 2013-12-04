@@ -15,5 +15,9 @@ public interface Graph {
 	 * @param property
 	 * @return
 	 */
-	ArrayList<GraphEdge> getNeighborsWithProperty(String from, String property);
+	ArrayList<GraphEdge> getNeighborsWithOutgoingProperty(String from, String property);
+	
+	ArrayList<GraphEdge> getNeighborsWithIncomingProperty(String to, String property);
+	
+	
 }
