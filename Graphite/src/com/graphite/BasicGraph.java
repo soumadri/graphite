@@ -9,7 +9,6 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.Mongo;
-import com.mongodb.WriteResult;
 
 public class BasicGraph implements Graph {
 	MongoConfiguration config;
@@ -207,4 +206,32 @@ public class BasicGraph implements Graph {
 		}
 		return foundEdges;
 	}
+
+	@Override
+	public ArrayList<GraphNode> getNodesWithValuesStartingFrom(String key,
+			String value, String collection) {
+		
+		ArrayList<GraphNode> foundNodes = new ArrayList<GraphNode>();
+		BasicDBObject query = new BasicDBObject();
+		query.put(key,java.util.regex.Pattern.compile(value));
+		                   
+		DBCollection coll = db.getCollection(collection);
+		coll.setObjectClass(GraphNode.class);
+		DBCursor cursor = coll.find(query).limit(10);
+
+		try {
+		   while(cursor.hasNext()) {		       
+		       GraphNode node = (GraphNode) cursor.next();
+		       node.put("_id", node.get("_id").toString());
+		       foundNodes.add(node);
+		   }
+		} finally {
+		   cursor.close();
+		}
+		
+		return foundNodes;
+		
+	}
+
+	
 }

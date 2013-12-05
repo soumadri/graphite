@@ -10,14 +10,12 @@ public interface Graph {
 	public ArrayList<GraphNode> getNodes(String key, String value);
 	public ArrayList<GraphEdge> getNeighbors(String from);
 	public boolean isAdjacent(GraphNode node1, GraphNode node2);
-	/**
-	 * @param from
-	 * @param property
-	 * @return
-	 */
+	
 	ArrayList<GraphEdge> getNeighborsWithOutgoingProperty(String from, String property);
 	
 	ArrayList<GraphEdge> getNeighborsWithIncomingProperty(String to, String property);
+	
+	public ArrayList<GraphNode> getNodesWithValuesStartingFrom(String key, String value, String collection);
 	
 	
 }
