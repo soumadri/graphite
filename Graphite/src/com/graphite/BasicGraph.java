@@ -2,6 +2,8 @@ package com.graphite;
 
 import java.util.ArrayList;
 
+import org.bson.types.ObjectId;
+
 import com.graphite.connector.MongoConfiguration;
 import com.graphite.connector.MongoConnectionProvider;
 import com.mongodb.BasicDBObject;
@@ -231,6 +233,30 @@ public class BasicGraph implements Graph {
 		
 		return foundNodes;
 		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.graphite.Graph#getNodeById(java.lang.String)
+	 */
+	@Override
+	public GraphNode getNodeById(String id,String collection) {
+		ArrayList<GraphNode> foundNodes = new ArrayList<GraphNode>();
+		BasicDBObject query = new BasicDBObject("_id", new ObjectId(id));
+		DBCollection coll = db.getCollection(collection);
+		coll.setObjectClass(GraphNode.class);
+		DBCursor cursor = coll.find(query);
+		try {
+		   while(cursor.hasNext()) {		       
+		       GraphNode node = (GraphNode) cursor.next();
+		       node.put("_id", node.get("_id").toString());
+		       foundNodes.add(node);
+		   }
+		} finally {
+		   cursor.close();
+		}
+		
+		return foundNodes.get(0);
+
 	}
 
 	

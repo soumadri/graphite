@@ -17,5 +17,7 @@ public interface Graph {
 	
 	public ArrayList<GraphNode> getNodesWithValuesStartingFrom(String key, String value, String collection);
 	
+	public GraphNode getNodeById(String id,String collection);
+	
 	
 }
