@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public interface Graph {
 	public void addNode(GraphNode node);
-	public void addEdge(GraphEdge edge);
+	public String addEdge(GraphEdge edge);
 	public void deleteEdge(GraphNode node1, GraphNode node2);
 	public void deleteEdge(GraphEdge edge);
 	public ArrayList<GraphNode> getNodes(String key, String value);
@@ -19,5 +19,8 @@ public interface Graph {
 	
 	public GraphNode getNodeById(String id,String collection);
 	
+	public GraphEdge getEdgeById(String id);
+	
+	public void saveEdge(GraphEdge edge);
 	
 }

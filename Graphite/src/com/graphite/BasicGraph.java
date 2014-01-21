@@ -71,8 +71,9 @@ public class BasicGraph implements Graph {
 	 * @param edge A GraphEdhe object
 	 */
 	@Override
-	public void addEdge(GraphEdge edge){
-		edges.insert(edge);		
+	public String addEdge(GraphEdge edge){
+		edges.insert(edge);
+		return edge.get( "_id" ).toString();
 	}
 	
 	/**
@@ -259,5 +260,32 @@ public class BasicGraph implements Graph {
 
 	}
 
-	
+	/* (non-Javadoc)
+	 * @see com.graphite.Graph#getEdgeById(java.lang.String)
+	 */
+	@Override
+	public GraphEdge getEdgeById(String id) {
+		
+		ArrayList<GraphEdge> foundNodes = new ArrayList<GraphEdge>();
+		BasicDBObject query = new BasicDBObject("_id", new ObjectId(id));
+		DBCollection coll = db.getCollection("edges");
+		coll.setObjectClass(GraphEdge.class);
+		DBCursor cursor = coll.find(query);
+		try {
+		   while(cursor.hasNext()) {		       
+			   GraphEdge edge = (GraphEdge) cursor.next();
+			   edge.put("_id", edge.get("_id").toString());
+		       foundNodes.add(edge);
+		   }
+		} finally {
+		   cursor.close();
+		}
+		
+		return foundNodes.get(0);
+
+	}
+
+	public void saveEdge(GraphEdge edge){
+		edges.save(edge);
+	}	
 }

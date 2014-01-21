@@ -26,17 +26,32 @@ public class GraphiteTests{
     	System.out.println("Setting up DB config");
     	config = new MongoConfiguration();
 		config.addServer("localhost", 27017);
-		config.setDatabase("saola");
+		config.setDatabase("ds1");
 		config.setNodesCollectionName("nodes");
 		config.setEdgesCollectionName("edges");
+		
+		
+		//Create a graph
+		BasicGraph g = GraphProvider.getGraph(config);
+		
+		GraphEdge edge = new GraphEdge("soumadri1@gmail.com", false, "gouravkakkar@gmail.com", "friend");
+		String id=g.addEdge(edge);
+		System.out.println("ID="+id);
+		GraphEdge edge1=g.getEdgeById(id);
+		System.out.println(edge1.get("property"));
+		edge1.put("relation", "TL");
+		g.saveEdge(edge1);
+		System.out.println(edge1.get("relation"));
+		edge1.put("relation", "TL2");
+		g.saveEdge(edge1);
     }
  
     @AfterClass
     public static void oneTimeTearDown() {
         // one-time cleanup code   
-    	System.out.println("Cleaning up the DB");
-    	Mongo m = MongoConnectionProvider.getMongo(config);
-    	m.dropDatabase("saola");
+    	//System.out.println("Cleaning up the DB");
+    	//Mongo m = MongoConnectionProvider.getMongo(config);
+    	//m.dropDatabase("saola");
     }
 		
 	@Test
@@ -44,7 +59,7 @@ public class GraphiteTests{
 		Mongo m = MongoConnectionProvider.getMongo(config);
 		assertNotNull(m.getDB("saola"));		
 	}
-	
+	/*	
 	@Test
 	public void testNodeInsert() throws UnknownHostException {				
 		//Data 
@@ -92,5 +107,5 @@ public class GraphiteTests{
 		assertTrue(g.getNodes("_id", "gouravkakkar@gmail.com").size() > 0);
 		assertTrue(g.getNeighbors("soumadri@gmail.com").size() > 0);	
 	}
-	
+*/	
 }
