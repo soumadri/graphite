@@ -1,6 +1,7 @@
 package com.graphite;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public interface Graph {
 	public void addNode(GraphNode node);
@@ -15,6 +16,8 @@ public interface Graph {
 	
 	ArrayList<GraphEdge> getNeighborsWithIncomingProperty(String to, String property);
 	
+	ArrayList<GraphEdge> getNeighborsWithFromTo(String from, String to,String property);
+	
 	public ArrayList<GraphNode> getNodesWithValuesStartingFrom(String key, String value, String collection);
 	
 	public GraphNode getNodeById(String id,String collection);
@@ -22,5 +25,7 @@ public interface Graph {
 	public GraphEdge getEdgeById(String id);
 	
 	public void saveEdge(GraphEdge edge);
+	
+	ArrayList<GraphEdge> getEdgesWithExpireDate(Date date,String property);
 	
 }

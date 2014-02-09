@@ -1,6 +1,7 @@
 package com.graphite;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.bson.types.ObjectId;
 
@@ -274,7 +275,7 @@ public class BasicGraph implements Graph {
 		try {
 		   while(cursor.hasNext()) {		       
 			   GraphEdge edge = (GraphEdge) cursor.next();
-			   edge.put("_id", edge.get("_id").toString());
+			   edge.put("_id", edge.get("_id"));
 		       foundNodes.add(edge);
 		   }
 		} finally {
@@ -287,5 +288,50 @@ public class BasicGraph implements Graph {
 
 	public void saveEdge(GraphEdge edge){
 		edges.save(edge);
-	}	
-}
+	}
+
+	
+	@Override
+	public ArrayList<GraphEdge> getNeighborsWithFromTo(String from, String to,String property) {
+		
+		ArrayList<GraphEdge> foundEdges = new ArrayList<GraphEdge>();
+		BasicDBObject query = new BasicDBObject("from", from);
+		query.put("to", to);
+		query.put("property", property);
+		DBCollection coll = db.getCollection("edges");
+		coll.setObjectClass(GraphEdge.class);
+		DBCursor cursor = coll.find(query);
+		try {
+		   while(cursor.hasNext()) {		       
+			   GraphEdge edge = (GraphEdge) cursor.next();
+			   edge.put("_id", edge.get("_id").toString());
+		       foundEdges.add(edge);
+		   }
+		} finally {
+		   cursor.close();
+		}
+		
+		return foundEdges;
+	}
+
+	@Override
+	public ArrayList<GraphEdge> getEdgesWithExpireDate(Date date,String property) {
+		ArrayList<GraphEdge> foundEdges = new ArrayList<GraphEdge>();
+		BasicDBObject query = new BasicDBObject("property", property);
+		query.append("expiryDate",date);
+		
+		edges.setObjectClass(GraphEdge.class);
+		DBCursor cursor = edges.find(query);
+		
+		try {
+		   while(cursor.hasNext()) {			   		       
+		       GraphEdge edge = (GraphEdge) cursor.next();
+		       foundEdges.add(edge);
+		   }
+		} finally {
+		   cursor.close();
+		}
+		
+		return foundEdges;
+
+	}}
