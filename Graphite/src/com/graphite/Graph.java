@@ -28,4 +28,6 @@ public interface Graph {
 	
 	ArrayList<GraphEdge> getEdgesWithExpireDate(Date date,String property);
 	
+	ArrayList<GraphEdge> getEdgesWithOutgoingProperty(String from,String property,String sortBy,int limit,int order);
+	
 }

@@ -334,4 +334,26 @@ public class BasicGraph implements Graph {
 		
 		return foundEdges;
 
+	}
+
+	@Override
+	public ArrayList<GraphEdge> getEdgesWithOutgoingProperty(String from,
+			String property, String sortBy, int limit, int order) {
+		ArrayList<GraphEdge> foundEdges = new ArrayList<GraphEdge>();
+		BasicDBObject query = new BasicDBObject("from", from);
+		query.append("property", property);
+		
+		edges.setObjectClass(GraphEdge.class);
+		DBCursor cursor = edges.find(query).sort(new BasicDBObject(sortBy, order)).limit(limit);
+		
+		try {
+		   while(cursor.hasNext()) {			   		       
+		       GraphEdge edge = (GraphEdge) cursor.next();
+		       foundEdges.add(edge);
+		   }
+		} finally {
+		   cursor.close();
+		}
+		
+		return foundEdges;
 	}}
