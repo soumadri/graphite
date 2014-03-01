@@ -2,6 +2,9 @@ package com.graphite;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bson.types.ObjectId;
 
@@ -11,6 +14,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 
 public class BasicGraph implements Graph {
@@ -356,4 +360,119 @@ public class BasicGraph implements Graph {
 		}
 		
 		return foundEdges;
+	}
+
+	
+	@Override
+	public ArrayList<GraphEdge> getEdgesWithProperties(Map map) {
+	
+		ArrayList<GraphEdge> foundEdges = new ArrayList<GraphEdge>();
+		BasicDBObject query = new BasicDBObject();
+		
+		Iterator entries = map.entrySet().iterator();
+		while (entries.hasNext()) {
+		  Entry thisEntry = (Entry) entries.next();
+		  String key = (String) thisEntry.getKey();
+		  Object value = thisEntry.getValue();
+		  query.append(key, value);
+		}
+		
+		edges.setObjectClass(GraphEdge.class);
+		DBCursor cursor = edges.find(query);
+		
+		try {
+		   while(cursor.hasNext()) {			   		       
+		       GraphEdge edge = (GraphEdge) cursor.next();
+		       foundEdges.add(edge);
+		   }
+		} finally {
+		   cursor.close();
+		}
+		
+		return foundEdges;
+	}
+
+	@Override
+	public boolean deleteNodeById(String id,String collection) {
+		
+		BasicDBObject query = new BasicDBObject("_id", new ObjectId(id));
+		DBCollection coll = db.getCollection(collection);
+		coll.setObjectClass(GraphNode.class);
+		DBObject doc = coll.findOne(query);
+		coll.remove(doc);
+		return true;
+	}
+
+	@Override
+	public ArrayList<GraphEdge> getEdgesWithProperties(Map map, String sortBy,
+			int limit, int order) {
+		ArrayList<GraphEdge> foundEdges = new ArrayList<GraphEdge>();
+		BasicDBObject query = new BasicDBObject();
+		
+		Iterator entries = map.entrySet().iterator();
+		while (entries.hasNext()) {
+		  Entry thisEntry = (Entry) entries.next();
+		  String key = (String) thisEntry.getKey();
+		  Object value = thisEntry.getValue();
+		  query.append(key, value);
+		}
+		
+		edges.setObjectClass(GraphEdge.class);
+		DBCursor cursor = edges.find(query).sort(new BasicDBObject(sortBy, order)).limit(limit);
+		
+		try {
+		   while(cursor.hasNext()) {			   		       
+		       GraphEdge edge = (GraphEdge) cursor.next();
+		       foundEdges.add(edge);
+		   }
+		} finally {
+		   cursor.close();
+		}
+		
+		return foundEdges;
+
+	}
+
+	@Override
+	public boolean updateNodeById(String id,String collection, Map map) {
+		
+		BasicDBObject query = new BasicDBObject("_id", new ObjectId(id));
+		DBCollection coll = db.getCollection(collection);
+		coll.setObjectClass(GraphNode.class);
+		
+		BasicDBObject newDocument = new BasicDBObject();
+		
+		Iterator entries = map.entrySet().iterator();
+		while (entries.hasNext()) {
+		  Entry thisEntry = (Entry) entries.next();
+		  String key = (String) thisEntry.getKey();
+		  Object value = thisEntry.getValue();
+		  newDocument.append("$set", new BasicDBObject().append(key, value));
+		}
+		
+		coll.update(query, newDocument);
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.graphite.Graph#getNodesOfCollection(java.lang.String)
+	 */
+	@Override
+	public ArrayList<GraphNode> getNodesOfCollection(String collection) {
+		ArrayList<GraphNode> foundNodes = new ArrayList<GraphNode>();
+		DBCollection coll = db.getCollection(collection);
+		coll.setObjectClass(GraphNode.class);
+		DBCursor cursor = coll.find();
+		
+		try {
+			   while(cursor.hasNext()) {		       
+			       GraphNode node = (GraphNode) cursor.next();
+			       node.put("_id", node.get("_id").toString());
+			       foundNodes.add(node);
+			   }
+			} finally {
+			   cursor.close();
+			}
+			
+			return foundNodes;
 	}}

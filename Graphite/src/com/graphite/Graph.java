@@ -2,6 +2,7 @@ package com.graphite;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 public interface Graph {
 	public void addNode(GraphNode node);
@@ -30,4 +31,13 @@ public interface Graph {
 	
 	ArrayList<GraphEdge> getEdgesWithOutgoingProperty(String from,String property,String sortBy,int limit,int order);
 	
+	ArrayList<GraphEdge> getEdgesWithProperties(Map map);
+	
+	ArrayList<GraphEdge> getEdgesWithProperties(Map map,String sortBy,int limit,int order);
+	
+	boolean deleteNodeById(String id,String collection);
+	
+	boolean updateNodeById(String id,String collection,Map map);
+	
+	ArrayList<GraphNode> getNodesOfCollection(String collection);
 }
